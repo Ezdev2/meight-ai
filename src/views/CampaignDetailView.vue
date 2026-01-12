@@ -1,11 +1,12 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ChevronLeft, Users, Award, MapPin, Briefcase } from 'lucide-vue-next'
+import { ChevronLeft, Users, Award, MapPin, Briefcase, Plus } from 'lucide-vue-next'
 import DashboardSidebar from '../components/DashboardSidebar.vue'
 import CandidateCard from '../components/CandidateCard.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import BaseButton from '../components/BaseButton.vue'
+import AddCandidateModal from '../components/AddCandidateModal.vue'
 import { useCampaignStore } from '../stores/campaignStore'
 import { useParticipantStore } from '../stores/participantStore'
 
@@ -19,8 +20,34 @@ const campaign = computed(() => campaignStore.getCampaignById(route.params.id))
 const candidates = computed(() => participantStore.getParticipantsByCampaign(route.params.id))
 const topMatch = computed(() => participantStore.getTopMatchForCampaign(route.params.id))
 
+// State for Modal
+const isAddModalOpen = ref(false)
+const isAnalyzing = ref(false)
+
 const goBack = () => {
   router.push('/dashboard')
+}
+
+
+// Single CV Analysis
+const handleAnalyzeSingle = async (file) => {
+  isAnalyzing.value = true
+  try {
+    const newId = await participantStore.analyzeSingleCandidate(route.params.id, file)
+    isAddModalOpen.value = false
+    router.push(`/candidate/${newId}`)
+  } catch (error) {
+    console.error("AI Error", error)
+  } finally {
+    isAnalyzing.value = false
+  }
+}
+
+// Batch Upload (Background process)
+const handleUploadBatch = (files) => {
+  participantStore.uploadBatchCandidates(route.params.id, files)
+  isAddModalOpen.value = false
+  alert("Import started! Candidates will appear in the list as they are processed.")
 }
 </script>
 
@@ -31,10 +58,7 @@ const goBack = () => {
     <div class="flex-1">
       <div class="p-8">
         <div class="mb-6">
-          <button
-            @click="goBack"
-            class="flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-4"
-          >
+          <button @click="goBack" class="flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-4">
             <ChevronLeft :size="20" />
             <span class="text-sm font-medium">Back to Dashboard</span>
           </button>
@@ -60,6 +84,11 @@ const goBack = () => {
                 </div>
                 <p class="text-slate-700 leading-relaxed">{{ campaign.description }}</p>
               </div>
+
+              <BaseButton variant="primary" class="flex items-center gap-2" @click="isAddModalOpen = true">
+                <Plus :size="20" />
+                Add Candidates
+              </BaseButton>
             </div>
 
             <div class="grid grid-cols-3 gap-6 pt-6 border-t border-slate-200">
@@ -92,7 +121,7 @@ const goBack = () => {
                 <div>
                   <p class="text-sm text-slate-600">Interviews</p>
                   <p class="text-2xl font-bold text-slate-900">
-                    {{ candidates.filter(c => c.status === 'Interview Scheduled').length }}
+                    {{candidates.filter(c => c.status === 'Interview Scheduled').length}}
                   </p>
                 </div>
               </div>
@@ -106,18 +135,25 @@ const goBack = () => {
           <div v-if="candidates.length === 0" class="card p-12 text-center">
             <Users :size="48" class="text-slate-300 mx-auto mb-4" />
             <h3 class="text-lg font-semibold text-slate-900 mb-2">No candidates yet</h3>
-            <p class="text-slate-600">Candidates will appear here once they apply to this position</p>
+            <p class="text-slate-600 mb-6">Candidates will appear here once they apply to this position</p>
+            <BaseButton variant="outline" @click="isAddModalOpen = true">
+              Add First Candidate
+            </BaseButton>
           </div>
 
           <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <CandidateCard
-              v-for="candidate in candidates"
-              :key="candidate.id"
-              :candidate="candidate"
-            />
+            <CandidateCard v-for="candidate in candidates" :key="candidate.id" :candidate="candidate" />
           </div>
         </div>
       </div>
     </div>
+
+    <AddCandidateModal 
+      :is-open="isAddModalOpen" 
+      :is-processing="isAnalyzing" 
+      @close="isAddModalOpen = false"
+      @analyze-single="handleAnalyzeSingle" 
+      @upload-batch="handleUploadBatch" 
+    />
   </div>
 </template>

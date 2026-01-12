@@ -1,146 +1,25 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
+import { mockParticipants } from '../data/mockParticipants'
 
 export const useParticipantStore = defineStore('participant', () => {
-  const participants = ref([
-    {
-      id: '1',
-      campaignId: '1',
-      name: 'Jean Dupont',
-      email: 'jean.dupont@email.com',
-      phone: '+33 6 12 34 56 78',
-      linkedin: 'https://linkedin.com/in/jeandupont',
-      avatar: null,
-      experience: '7 Years',
-      currentPosition: 'Senior Frontend Developer',
-      currentCompany: 'TechCorp',
-      location: 'Paris, France',
-      matchScore: 88,
-      status: 'Interview Scheduled',
-      appliedAt: '2024-01-11',
-      aiSummary: 'Jean is a strong technical lead with deep expertise in the Vue ecosystem. He matches the seniority requirement perfectly but lacks recent AWS certification.',
-      strengths: ['Vue.js', 'Team Lead', 'SaaS Experience', 'Agile Methodology', 'Mentorship'],
-      missingSkills: ['AWS Certification'],
-      resumeUrl: null
-    },
-    {
-      id: '2',
-      campaignId: '1',
-      name: 'Sarah Chen',
-      email: 'sarah.chen@email.com',
-      phone: '+1 415 555 0123',
-      linkedin: 'https://linkedin.com/in/sarahchen',
-      avatar: null,
-      experience: '5 Years',
-      currentPosition: 'Frontend Engineer',
-      currentCompany: 'StartupXYZ',
-      location: 'San Francisco, CA',
-      matchScore: 92,
-      status: 'New Application',
-      appliedAt: '2024-01-12',
-      aiSummary: 'Sarah is an exceptional Vue.js developer with a strong portfolio of SaaS products. Her technical skills are outstanding and she has experience scaling applications to millions of users.',
-      strengths: ['Vue.js', 'TypeScript', 'Performance Optimization', 'Testing', 'UI/UX'],
-      missingSkills: [],
-      resumeUrl: null
-    },
-    {
-      id: '3',
-      campaignId: '1',
-      name: 'Marcus Johnson',
-      email: 'marcus.j@email.com',
-      phone: '+44 20 7123 4567',
-      linkedin: 'https://linkedin.com/in/marcusjohnson',
-      avatar: null,
-      experience: '6 Years',
-      currentPosition: 'Lead Frontend Developer',
-      currentCompany: 'Digital Solutions Ltd',
-      location: 'London, UK',
-      matchScore: 85,
-      status: 'Under Review',
-      appliedAt: '2024-01-10',
-      aiSummary: 'Marcus brings solid Vue.js experience and has led multiple successful projects. He demonstrates strong architectural thinking and has experience with large-scale applications.',
-      strengths: ['Vue.js', 'Architecture Design', 'Code Review', 'CI/CD', 'Documentation'],
-      missingSkills: ['Pinia', 'Vite'],
-      resumeUrl: null
-    },
-    {
-      id: '4',
-      campaignId: '1',
-      name: 'Emily Rodriguez',
-      email: 'emily.r@email.com',
-      phone: '+1 305 555 0198',
-      linkedin: 'https://linkedin.com/in/emilyrodriguez',
-      avatar: null,
-      experience: '8 Years',
-      currentPosition: 'Senior Software Engineer',
-      currentCompany: 'MegaCorp',
-      location: 'Miami, FL',
-      matchScore: 79,
-      status: 'New Application',
-      appliedAt: '2024-01-09',
-      aiSummary: 'Emily has extensive frontend experience but primarily with React. Her willingness to transition to Vue.js and strong fundamental skills make her a viable candidate with some training.',
-      strengths: ['React', 'JavaScript', 'Team Collaboration', 'Problem Solving', 'Accessibility'],
-      missingSkills: ['Vue.js', 'Vue Ecosystem'],
-      resumeUrl: null
-    },
-    {
-      id: '5',
-      campaignId: '1',
-      name: 'Ahmed Hassan',
-      email: 'ahmed.hassan@email.com',
-      phone: '+971 50 123 4567',
-      linkedin: 'https://linkedin.com/in/ahmedhassan',
-      avatar: null,
-      experience: '9 Years',
-      currentPosition: 'Engineering Manager',
-      currentCompany: 'Tech Innovations',
-      location: 'Dubai, UAE',
-      matchScore: 90,
-      status: 'Interview Scheduled',
-      appliedAt: '2024-01-08',
-      aiSummary: 'Ahmed combines technical excellence with leadership experience. He has built and led frontend teams and has deep expertise in Vue.js and modern development practices.',
-      strengths: ['Vue.js', 'Team Management', 'System Design', 'Microservices', 'Stakeholder Communication'],
-      missingSkills: [],
-      resumeUrl: null
-    },
-    {
-      id: '6',
-      campaignId: '2',
-      name: 'Olivia Martinez',
-      email: 'olivia.m@email.com',
-      phone: '+1 212 555 0147',
-      linkedin: 'https://linkedin.com/in/oliviamartinez',
-      avatar: null,
-      experience: '4 Years',
-      currentPosition: 'Product Designer',
-      currentCompany: 'Creative Studio',
-      location: 'New York, NY',
-      matchScore: 88,
-      status: 'New Application',
-      appliedAt: '2024-01-11',
-      aiSummary: 'Olivia has a strong portfolio showcasing user-centered design and extensive experience with design systems. Her Figma expertise and research skills are exceptional.',
-      strengths: ['Figma', 'User Research', 'Design Systems', 'Prototyping', 'Interaction Design'],
-      missingSkills: ['Motion Design'],
-      resumeUrl: null
-    }
-  ])
+  // --- STATE ---
+  const participants = ref([...mockParticipants]) 
+  const isLoading = ref(false)
+  const error = ref(null)
 
-  function getParticipantsByCampaign(campaignId) {
-    return participants.value.filter(p => p.campaignId === campaignId)
+  // --- GETTERS ---
+  const getParticipantsByCampaign = (campaignId) => {
+    return participants.value
+      .filter(p => p.campaignId === campaignId)
+      .sort((a, b) => new Date(b.appliedAt) - new Date(a.appliedAt))
   }
 
-  function getParticipantById(id) {
+  const getParticipantById = (id) => {
     return participants.value.find(p => p.id === id)
   }
 
-  function updateParticipantStatus(id, status) {
-    const participant = participants.value.find(p => p.id === id)
-    if (participant) {
-      participant.status = status
-    }
-  }
-
-  function getTopMatchForCampaign(campaignId) {
+  const getTopMatchForCampaign = (campaignId) => {
     const campaignParticipants = getParticipantsByCampaign(campaignId)
     if (campaignParticipants.length === 0) return null
     return campaignParticipants.reduce((top, current) =>
@@ -148,11 +27,154 @@ export const useParticipantStore = defineStore('participant', () => {
     )
   }
 
+  // --- ACTIONS ---
+
+  // 1. Update Status (ADDED THIS MISSING FUNCTION)
+  function updateParticipantStatus(id, status) {
+    const participant = participants.value.find(p => p.id === id)
+    if (participant) {
+      participant.status = status
+      // In a real app, you would add an API call here:
+      // api.patch(`/participants/${id}`, { status })
+    }
+  }
+
+  // SIMULATEUR D'EXTRACTION IA
+  const _generateMockProfile = (fileOrData, campaignId) => {
+    const isFile = fileOrData instanceof File
+    const rawName = isFile ? fileOrData.name.split('.')[0].replace(/[-_]/g, ' ') : fileOrData.name
+    const score = Math.floor(Math.random() * (98 - 60) + 60)
+    const isHighMatch = score > 85
+
+    // Générateur de fausses dates pour la cohérence
+    const currentYear = new Date().getFullYear()
+
+    return {
+      id: Math.random().toString(36).substr(2, 9),
+      campaignId: campaignId,
+      
+      // --- HEADER INFO ---
+      name: rawName,
+      email: isFile ? `${rawName.toLowerCase().replace(/\s+/g, '.')}@email.com` : fileOrData.email,
+      phone: "+33 6 12 34 56 78",
+      location: "Paris, France",
+      linkedin: "#",
+      currentPosition: isFile ? "Senior Developer (Extracted)" : fileOrData.position,
+      currentCompany: "Tech Solutions Inc.",
+      experience: `${Math.floor(Math.random() * 8) + 2} ans`,
+      
+      // --- EXTRACTION CV (RAW DATA) ---
+      // 1. Expériences Professionnelles (Liste)
+      experiences: [
+        {
+          id: 1,
+          role: isFile ? "Senior Developer (Extracted)" : fileOrData.position,
+          company: "Tech Solutions Inc.",
+          date: `${currentYear - 2} - Aujourd'hui`,
+          description: "Développement de l'architecture front-end, mentoring de 3 juniors, migration vers Vue 3."
+        },
+        {
+          id: 2,
+          role: "Frontend Developer",
+          company: "WebAgency Paris",
+          date: `${currentYear - 5} - ${currentYear - 2}`,
+          description: "Intégration de maquettes, développement de composants réutilisables, optimisation SEO."
+        },
+        {
+          id: 3,
+          role: "Junior Web Dev",
+          company: "StartUp Nation",
+          date: `${currentYear - 6} - ${currentYear - 5}`,
+          description: "Maintenance du site vitrine, correction de bugs, mise en place de newsletters."
+        }
+      ],
+
+      // 2. Education (Liste)
+      educations: [
+        {
+          id: 1,
+          degree: "Master Ingénierie Web",
+          school: "École Supérieure du Digital",
+          date: `${currentYear - 6}`
+        },
+        {
+          id: 2,
+          degree: "Licence Informatique",
+          school: "Université de Paris",
+          date: `${currentYear - 8}`
+        }
+      ],
+
+      // 3. Autres Compétences (Secondaires)
+      otherSkills: ["Anglais (C1)", "Jira", "Notion", "Méthode Agile/Scrum", "Adobe XD"],
+
+      // --- ANALYSE IA ---
+      matchScore: score,
+      status: "New Application",
+      aiSummary: `Analyse IA : Profil cohérent avec ${Math.floor(Math.random() * 8) + 2} ans d'expérience. La progression de carrière est logique.`,
+      strengths: isHighMatch ? ["Vue.js Expert", "Architecture", "Mentoring"] : ["JavaScript", "HTML/CSS", "Git"],
+      missingSkills: isHighMatch ? [] : ["AWS Certification", "GraphQL"],
+      
+      appliedAt: new Date().toISOString()
+    }
+  }
+
+  // Action: Add Single Candidate
+  async function analyzeSingleCandidate(campaignId, file) {
+    isLoading.value = true
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000)) // Délai IA
+      const newProfile = _generateMockProfile(file, campaignId)
+      participants.value.unshift(newProfile)
+      return newProfile.id
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  // Action: Batch Upload
+  function uploadBatchCandidates(campaignId, files) {
+    files.forEach((file) => {
+      const delay = Math.random() * 5000 + 1000 
+      setTimeout(() => {
+        const newProfile = _generateMockProfile(file, campaignId)
+        participants.value.unshift(newProfile)
+      }, delay)
+    })
+  }
+
+  // Action: Manual Add
+  async function addManualCandidate(campaignId, formData) {
+    isLoading.value = true
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      // On utilise le CV s'il est là, sinon les données manuelles
+      const inputData = formData.cv ? formData.cv : formData
+      const newProfile = _generateMockProfile(inputData, campaignId)
+      
+      // Si manuel, on écrase avec les données précises saisies
+      if (!formData.cv) {
+        newProfile.name = formData.name
+        newProfile.email = formData.email
+        newProfile.currentPosition = formData.position
+      }
+      
+      participants.value.unshift(newProfile)
+      return newProfile.id
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   return {
     participants,
-    getParticipantsByCampaign,
+    isLoading,
+    analyzeSingleCandidate,
+    uploadBatchCandidates,
+    addManualCandidate,
     getParticipantById,
-    updateParticipantStatus,
-    getTopMatchForCampaign
+    getParticipantsByCampaign,
+    getTopMatchForCampaign,
+    updateParticipantStatus
   }
 })
