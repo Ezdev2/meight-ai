@@ -35,26 +35,25 @@ const features = [
   }
 ]
 </script>
-
 <template>
-  <div class="min-h-screen bg-[#FDFEFF] relative overflow-hidden">
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-gradient-to-b from-blue-50/50 to-transparent pointer-events-none"></div>
-    <div class="absolute top-20 left-[10%] w-64 h-64 bg-blue-200/20 blur-[100px] rounded-full"></div>
+  <div class="min-h-screen bg-[#F4F7FF] relative overflow-hidden font-sans text-slate-900">
+    <div class="absolute -top-24 -left-24 w-96 h-96 bg-blue-400/10 blur-[100px] rounded-full"></div>
+    <div class="absolute top-1/2 -right-24 w-80 h-80 bg-indigo-400/10 blur-[100px] rounded-full"></div>
 
     <div class="relative z-10">
-      <nav class="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
+      <nav class="flex items-center justify-between px-6 md:px-12 py-6 max-w-7xl mx-auto">
         <div class="flex items-center gap-2">
-          <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
-            <Brain :size="24" class="text-white" />
+          <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-200">
+            <Brain :size="22" class="text-white" />
           </div>
-          <span class="text-2xl font-bold text-slate-900 tracking-tight">MEIGHT</span>
+          <span class="text-xl font-bold tracking-tight">MEIGHT</span>
         </div>
 
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 md:gap-6">
           <button @click="handleHelp"
-            class="flex items-center gap-2 text-slate-600 hover:text-blue-600 font-medium transition-colors px-4 py-2">
-            <HelpCircle :size="20" />
-            Besoin d'aide
+            class="flex items-center gap-2 p-2 text-slate-600 hover:text-blue-600 font-medium transition-all">
+            <HelpCircle :size="22" />
+            <span class="hidden md:inline">Besoin d'aide</span>
           </button>
 
           <BaseButton variant="primary" @click="handleLogin" class="shadow-sm">
@@ -66,20 +65,22 @@ const features = [
         </div>
       </nav>
 
-      <div class="max-w-6xl mx-auto px-6 py-20">
-        <div class="text-center mb-16">
+      <main class="max-w-6xl mx-auto px-6 pt-16 md:pt-24">
+        <div class="text-center mb-20">
           <div
-            class="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-blue-600 bg-blue-50 rounded-full border border-blue-100">
-            ⭐⭐⭐⭐⭐
+            class="inline-flex items-center px-4 py-1.5 mb-8 text-sm font-semibold text-blue-700 bg-white border border-blue-100 rounded-full shadow-sm">
+            ⭐⭐⭐⭐⭐ <span class="ml-2 border-l pl-2 border-slate-200 text-slate-500">Nouveau standard IA</span>
           </div>
 
-          <h1 class="text-6xl font-extrabold text-slate-900 mb-6 leading-tight tracking-tight">
-            Meight est votre <span class="text-blue-600">Copilote</span> <br /> de Recrutement IA.
+          <h1 class="text-5xl md:text-7xl font-extrabold text-slate-900 mb-8 leading-[1.1] tracking-tight">
+            Meight est votre <span
+              class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Copilote</span> <br
+              class="hidden md:block" /> de Recrutement IA.
           </h1>
 
-          <p class="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Transformez votre processus d'embauche avec une analyse intelligente des candidats.
-            Trouvez le profil idéal plus rapidement grâce aux insights de l'IA.
+          <p class="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+            Trouvez le candidat idéal en quelques minutes, pas en quelques jours.
+            L'intelligence artificielle au service de vos décisions humaines.
           </p>
 
           <div class="flex flex-col items-center gap-4">
@@ -91,36 +92,46 @@ const features = [
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-          <div v-for="feature in features" :key="feature.title" class="card p-8">
-            <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
-              <component :is="feature.icon" :size="28" class="text-blue-600" />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-24">
+          <div v-for="feature in features" :key="feature.title"
+            class="bg-white/80 backdrop-blur-sm border border-white p-8 rounded-[2rem] shadow-sm hover:shadow-xl hover:bg-white transition-all duration-300 group">
+            <div
+              class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <component :is="feature.icon" :size="24" class="text-blue-600" />
             </div>
-            <h3 class="text-xl font-semibold text-slate-900 mb-2">{{ feature.title }}</h3>
-            <p class="text-slate-600">{{ feature.description }}</p>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">{{ feature.title }}</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">{{ feature.description }}</p>
           </div>
         </div>
 
         <div
-          class="rounded-[3rem] p-16 text-center bg-slate-900 text-white relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-700 text-white">
+          class="rounded-[3rem] p-12 md:p-20 mb-20 text-center bg-slate-900 text-white relative overflow-hidden bg-gradient-to-br from-blue-800 to-blue-600/20 text-white">
+          <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 blur-[80px]"></div>
           <div class="relative z-10">
-            <h3 class="text-4xl font-bold mb-6">Prêt à révolutionner votre recrutement ?</h3>
-            <p class="text-blue-100 text-xl mb-10 max-w-2xl mx-auto">
-              Rejoignez les entreprises visionnaires qui utilisent l'IA pour bâtir de meilleures équipes.
+            <h3 class="text-3xl md:text-4xl font-bold mb-6">Prêt à transformer votre équipe ?</h3>
+            <p class="text-slate-400 text-lg mb-10 max-w-xl mx-auto">
+              Rejoignez les recruteurs visionnaires qui utilisent l'IA pour bâtir le futur.
             </p>
-            <BaseButton variant="secondary" size="lg" @click="goToDashboard">
-              Commencer maintenant
+            <BaseButton variant="secondary" size="lg" @click="goToDashboard"
+              class="!bg-white !text-slate-900 hover:!bg-blue-50">
+              Démarrer maintenant
             </BaseButton>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   </div>
 </template>
 
 <style scoped>
-/* Ajout d'une police plus douce si disponible */
-.font-bold {
-  letter-spacing: -0.02em;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+:deep(button) {
+  font-family: 'Inter', sans-serif;
+}
+
+h1 {
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.04em;
 }
 </style>
