@@ -7,7 +7,7 @@ const route = useRoute()
 
 const navigation = [
   { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
-  { name: 'Campaigns', icon: Briefcase, path: '/dashboard' }
+  // { name: 'Campaigns', icon: Briefcase, path: '/dashboard' }
 ]
 
 const isActive = (path) => {
@@ -18,7 +18,7 @@ const isActive = (path) => {
 <template>
   <div class="w-64 bg-slate-900 min-h-screen text-white flex flex-col">
     <div class="p-6 border-b border-slate-800">
-      <div class="flex items-center gap-3">
+      <a href="/" class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
           <Brain :size="24" />
         </div>
@@ -26,7 +26,7 @@ const isActive = (path) => {
           <h1 class="text-xl font-bold">MEIGHT</h1>
           <p class="text-xs text-slate-400">AI Recruitment</p>
         </div>
-      </div>
+      </a>
     </div>
 
     <nav class="flex-1 p-4">
