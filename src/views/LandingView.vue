@@ -49,19 +49,23 @@ const features = [
           <span class="text-xl font-bold tracking-tight">MEIGHT</span>
         </div>
 
-        <div class="flex items-center gap-2 md:gap-6">
+        <div class="flex items-center gap-3 md:gap-6">
+
           <button @click="handleHelp"
-            class="flex items-center gap-2 p-2 text-slate-600 hover:text-blue-600 font-medium transition-all">
+            class="flex items-center justify-center gap-2 p-2 text-slate-600 hover:text-blue-600 font-medium transition-all"
+            title="Besoin d'aide">
             <HelpCircle :size="22" />
             <span class="hidden md:inline">Besoin d'aide</span>
           </button>
 
-          <BaseButton variant="primary" @click="handleLogin" class="shadow-sm">
+          <BaseButton variant="primary" @click="handleLogin"
+            class="!p-2.5 md:!px-6 md:!py-3 shadow-sm flex items-center justify-center">
             <div class="flex items-center gap-2">
-              <LogIn :size="18" />
-              Se connecter
+              <LogIn :size="20" />
+              <span class="hidden md:inline">Se connecter</span>
             </div>
           </BaseButton>
+
         </div>
       </nav>
 
