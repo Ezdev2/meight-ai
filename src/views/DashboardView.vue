@@ -46,7 +46,7 @@ const stats = computed(() => {
     <DashboardSidebar :is-open="isSidebarOpen" @close="isSidebarOpen = false" />
 
     <div class="flex-1 flex flex-col min-w-0">
-      <header class="md:hidden fixed w-full flex items-center justify-between bg-slate-900 px-6 py-4 border-b border-slate-200">
+      <header class="md:hidden fixed w-full flex items-center justify-between bg-slate-900 px-6 py-4 border-slate-200">
         <a href="/" class="flex items-center gap-3">
           <div class="w-10 h-10 text-white rounded-xl bg-blue-600 flex items-center justify-center">
             <Brain :size="24" />
